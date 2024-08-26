@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.google-text {
+  font-weight: 700;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.54);
+}
+body,
+html {
+  max-width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+:root {
+  --nav-wide-width: 72px;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ensure the items do not exceed their natural width and display flex */
+.carousel-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px !important; /* Set desired width for li elements */
+  flex: 0 0 80px; /* Fix flex-basis to 80px to prevent overflow */
+}
+
+/* Fix the width of li elements */
+.carousel-item li {
+  width: 80px !important;
+  flex: 0 0 80px;
+}
