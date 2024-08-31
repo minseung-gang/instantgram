@@ -26,11 +26,12 @@ export default async function RootLayout({ children, modal }: Props) {
       <body className="w-full flex overflow-auto">
         <AuthProvider>
           {user && <Navbar />}
-          <main className="w-full flex justify-center bg-neutral-50 min-h-full">
+          <main className="w-full flex justify-cente h-full">
             <ReactQueryProviders>{children} </ReactQueryProviders>
           </main>
           {modal}
         </AuthProvider>
+        <div id="modal-root" />
       </body>
     </html>
   );
