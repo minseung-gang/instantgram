@@ -27,7 +27,7 @@ export default function Avatar({
 }
 
 function getContainerClassName(size: AvatarSize, highlight: boolean): string {
-  const baseClass = 'rounded-full flex justify-center items-center';
+  const baseClass = 'rounded-full flex justify-center items-center min-w-fit';
   const highlightClass = highlight
     ? 'bg-gradient-to-bl from-fuchsia-600 via-rose-500 to-amber-300'
     : '';
@@ -46,7 +46,7 @@ function getImageClassName(size: AvatarSize, highlight: boolean): string {
 
 function getSizeClass(size: AvatarSize, type: 'container' | 'image'): string {
   const sizeMap = {
-    small: { container: 'w-10 h-10', image: 'w-[36px] h-[36px]' },
+    small: { container: 'w-[36px] h-[36px]', image: 'w-[36px] h-[36px]' },
     medium: { container: 'w-11 h-11', image: 'w-[40px] h-[40px]' },
     large: { container: 'w-[68px] h-[68px]', image: 'w-16 h-16' },
   };
