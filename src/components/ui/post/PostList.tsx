@@ -1,14 +1,15 @@
 'use client';
 
-import { queryKeys } from '@/service/query/post/queries';
-import { QueryKey, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { GridLoader } from 'react-spinners';
 import PostListCard from './PostListCard';
 import { SimplePost } from '@/model/post';
 
 async function fetchPosts() {
-  const response = await fetch('/api/posts');
+  const response = await fetch('/api/api-proxy?endpoint=posts', {
+    method: 'GET',
+  });
   if (!response.ok) {
     throw new Error('Failed to fetch posts');
   }
