@@ -16,7 +16,7 @@ export default function ActionBar({ likes, username, text }: Props) {
         <HeartIcon />
         <BookmarkIcon />
       </div>
-      <div className="py-1">
+      <div>
         {likes?.length > 1 ? (
           <span className="text-sm mb-2 flex">
             <p className="text-sm font-semibold">{likes[0]}</p>님&nbsp;
