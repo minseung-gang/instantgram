@@ -1,14 +1,26 @@
-import { useState } from 'react';
+import { initialModalState, ModalType } from '@/model/modal';
+import { modalReducer } from '@/reducer/modalReducer';
+import { useReducer } from 'react';
 
 export default function useModal() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [modalState, dispatch] = useReducer(modalReducer, initialModalState);
 
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  const openModal = (type: ModalType) => {
+    dispatch({ type: 'OPEN_MODAL', modalType: type });
+  };
+
+  const closeModal = (type: ModalType) => {
+    dispatch({ type: 'CLOSE_MODAL', modalType: type });
+  };
+
+  const toggleModal = (type: ModalType) => {
+    dispatch({ type: 'TOGGLE_MODAL', modalType: type });
+  };
 
   return {
-    isOpen,
+    modalState,
     openModal,
     closeModal,
+    toggleModal,
   };
 }
