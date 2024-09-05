@@ -22,14 +22,14 @@ export default async function RootLayout({ children, modal }: Props) {
   const session = await getServerSession(authOptions);
   const user = session?.user;
   return (
-    <html lang="en" className={`${openSans.className}`}>
+    <html lang="ko" className={`${openSans.className}`}>
       <body className="w-full flex overflow-auto">
         <AuthProvider>
-          {user && <Navbar />}
-          <main className="w-full flex justify-cente h-full">
-            <ReactQueryProviders>{children} </ReactQueryProviders>
-          </main>
-          {modal}
+          <ReactQueryProviders>
+            {user && <Navbar />}
+            <main className="w-full flex justify-cente h-full">{children}</main>
+            {modal}
+          </ReactQueryProviders>
         </AuthProvider>
         <div id="modal-root" />
       </body>
