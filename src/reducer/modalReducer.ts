@@ -1,13 +1,25 @@
-import { initialModalState, ModalAction, ModalState } from '@/model/modal';
+export type ModalType = 'search' | 'newPost';
 
+interface ModalState {
+  [key: string]: { isOpen: boolean; props: any };
+}
+
+const initialModalState: ModalState = {
+  search: { isOpen: false, props: {} },
+  newPost: { isOpen: false, props: {} },
+};
+
+// Define actions for opening, closing, and toggling modals
+type ModalAction =
+  | { type: 'OPEN_MODAL'; modalType: ModalType; props?: any }
+  | { type: 'CLOSE_MODAL'; modalType: ModalType }
+  | { type: 'TOGGLE_MODAL'; modalType: ModalType; props?: any };
+
+// Reducer function to handle modal state changes
 export function modalReducer(
-  state: ModalState = initialModalState,
+  state: ModalState,
   action: ModalAction,
 ): ModalState {
-  if (!action.modalType || !(action.modalType in state)) {
-    return state; // modalType이 null이거나 상태에 없는 키일 때
-  }
-
   switch (action.type) {
     case 'OPEN_MODAL':
       return {
@@ -31,3 +43,5 @@ export function modalReducer(
       return state;
   }
 }
+
+export { initialModalState };
