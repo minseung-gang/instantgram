@@ -8,6 +8,7 @@ import ReactQueryProviders from '../hooks/useReactQuery';
 import Navbar from '@/components/commons/Navbar';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]/route';
+import useModal from '@/hooks/useModal';
 
 type Props = { children: ReactNode; modal: ReactNode };
 
@@ -27,7 +28,9 @@ export default async function RootLayout({ children, modal }: Props) {
         <AuthProvider>
           <ReactQueryProviders>
             {user && <Navbar />}
-            <main className="w-full flex justify-cente h-full">{children}</main>
+            <main className="w-full flex justify-cente h-full overflow-scroll">
+              {children}
+            </main>
             {modal}
           </ReactQueryProviders>
         </AuthProvider>
