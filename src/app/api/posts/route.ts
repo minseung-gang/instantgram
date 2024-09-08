@@ -6,7 +6,7 @@ import { getFollowingPostsOf } from '@/service/sanity/post';
 
 export async function GET() {
   const session = await getServerSession(authOptions);
-  console.log('세션', session);
+
   const user = session?.user;
 
   if (!user) {
