@@ -1,10 +1,14 @@
+'use client';
+
 import { useSearchUsers } from '@/service/user/useUserService';
 import React, { useState, FormEvent, useRef, useEffect } from 'react';
 import ModalPortal from '../ModalPortal';
 import useModalAnimation from '@/hooks/useModalAnimation';
-import { ClipLoader, FadeLoader } from 'react-spinners';
+import { ClipLoader } from 'react-spinners';
 import { ProfileUser } from '@/model/user';
 import { IoCloseCircle } from 'react-icons/io5';
+import { useSearchQuery } from '@/hooks/useSearchArticle';
+import SearchSkeleton from '../SearchSkeleton';
 
 type Props = {
   isOpen: boolean;
@@ -13,29 +17,28 @@ type Props = {
 
 export default function UserSearch({ isOpen, onClose }: Props) {
   const [keyword, setKeyword] = useState('');
-  const { data: users, isLoading, error } = useSearchUsers(keyword);
+
+  const { users, isLoading, isFetching, error, refetch } =
+    useSearchQuery(keyword);
   const { visible, startAnimation } = useModalAnimation(isOpen);
-  const [isFocused, setIsFocused] = useState(false); // Focus 상태 관리 추가
   const inputRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    // 모달 외부 클릭 감지 핸들러
     const handleOutsideClick = (e: MouseEvent) => {
       if (
         modalRef.current &&
         !modalRef.current.contains(e.target as Node) &&
         isOpen
       ) {
+        e.stopPropagation();
         onClose(); // 모달 닫기
       }
     };
 
-    // 이벤트 리스너 등록
-    document.addEventListener('mousedown', handleOutsideClick);
-
-    // 이벤트 리스너 해제
+    document.addEventListener('click', handleOutsideClick);
     return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('click', handleOutsideClick);
     };
   }, [isOpen, onClose]);
 
@@ -54,7 +57,6 @@ export default function UserSearch({ isOpen, onClose }: Props) {
 
   // 아이콘 클릭 시 포커스 해제 방지 및 키워드 초기화
   const handleIconClick = (e: React.MouseEvent) => {
-    e.preventDefault();
     setKeyword(''); // 키워드 초기화
     inputRef.current?.focus(); // 포커스 유지
   };
@@ -68,13 +70,13 @@ export default function UserSearch({ isOpen, onClose }: Props) {
         ref={modalRef}
       >
         <div
-          className="flex flex-col absolute top-0 left-0 w-full h-full bg-white py-6 px-5 rounded-tr-3xl rounded-br-2xl shadow-[5px_0px_30px_-10px_rgba(0,0,0,0.2)]"
+          className="flex flex-col absolute top-0 left-0 w-full h-full bg-white rounded-tr-3xl rounded-br-2xl shadow-[5px_0px_30px_-10px_rgba(0,0,0,0.2)]"
           onClick={handleInsideClick}
         >
-          <div className="pb-6">
+          <div className="px-4 pt-5 pb-6">
             <span className="text-2xl font-semibold">검색</span>
           </div>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={onSubmit} className="px-4 pb-5">
             <div className="relative flex items-center py-2 px-3 bg-gray-100 rounded-md">
               <input
                 className="w-full bg-transparent text-gray-400 text-sm placeholder:font-light placeholder:text-gray-300 outline-none"
@@ -83,11 +85,9 @@ export default function UserSearch({ isOpen, onClose }: Props) {
                 placeholder="검색"
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
-                onFocus={() => setIsFocused(true)} // 포커스 상태 설정
-                onBlur={() => setIsFocused(false)} // 포커스 해제 시 상태 업데이트
               />
 
-              {isLoading ? (
+              {isLoading || isFetching ? (
                 <div className="w-5 h-5">
                   <ClipLoader color="gray" size={15} />
                 </div>
@@ -102,21 +102,33 @@ export default function UserSearch({ isOpen, onClose }: Props) {
             </div>
           </form>
 
-          <div className="flex items-center justify-center flex-grow py-4">
-            {(!isLoading && !error && keyword === '') ||
-            users?.length == undefined ? (
-              <p>찾는 사용자가 없음</p>
-            ) : (
-              <ul>
-                {users &&
-                  users.map((user: ProfileUser) => (
-                    <li key={user.username}>
-                      <p>{user.username}</p>
-                    </li>
-                  ))}
-              </ul>
-            )}
-          </div>
+          {isLoading || isFetching ? (
+            <div className="flex flex-col w-full h-full gap-y-5  py-4 px-4">
+              {Array.from({ length: 15 }).map((_, index) => (
+                <SearchSkeleton key={index} />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col flex-grow py-4 px-4 border-t border-gray-300">
+              <p className="py-2 font-semibold">최근 검색 항목</p>
+              <div className="flex flex-grow items-center ">
+                {!isLoading && !error && keyword === '' ? (
+                  <div className="flex justify-center flex-grow ">
+                    <p className="text-sm font-semibold">찾는 사용자가 없음</p>
+                  </div>
+                ) : (
+                  <ul className="flex-grow">
+                    {users &&
+                      users.map((user: ProfileUser) => (
+                        <li key={user.username}>
+                          <p>{user.username}</p>
+                        </li>
+                      ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </ModalPortal>
