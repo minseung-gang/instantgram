@@ -2,12 +2,12 @@
 
 import React from 'react';
 import Avatar from './Avatar';
-import { User } from '@/model/user';
+import { AuthUser } from '@/model/user';
 import Link from 'next/link';
 import { useDetailPost } from '@/service/post/client/usePostService';
 
 type Props = {
-  user: User;
+  user: AuthUser;
 };
 
 export default function UserSidebar({ user }: Props) {
@@ -16,7 +16,7 @@ export default function UserSidebar({ user }: Props) {
   return (
     <div className="pl-10 below-xl:hidden">
       <div className="flex items-center gap-x-2 mt-8 px-3">
-        <Link href={`/user/${name}`}>
+        <Link href={`/user/${username}`}>
           <Avatar image={image} size="small" />
         </Link>
         <div>
