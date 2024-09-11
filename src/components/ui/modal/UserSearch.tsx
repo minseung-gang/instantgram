@@ -5,10 +5,14 @@ import React, { useState, FormEvent, useRef, useEffect } from 'react';
 import ModalPortal from '../ModalPortal';
 import useModalAnimation from '@/hooks/useModalAnimation';
 import { ClipLoader } from 'react-spinners';
-import { ProfileUser } from '@/model/user';
+import { SearchUser } from '@/model/user';
 import { IoCloseCircle } from 'react-icons/io5';
 import { useSearchQuery } from '@/hooks/useSearchArticle';
 import SearchSkeleton from '../SearchSkeleton';
+import Image from 'next/image';
+import Avatar from '@/components/Avatar';
+import UserCard from '@/components/UserCard';
+import useDebounce from '@/hooks/useDebounce';
 
 type Props = {
   isOpen: boolean;
@@ -17,9 +21,9 @@ type Props = {
 
 export default function UserSearch({ isOpen, onClose }: Props) {
   const [keyword, setKeyword] = useState('');
-
-  const { users, isLoading, isFetching, error, refetch } =
-    useSearchQuery(keyword);
+  const debouncedKeyword = useDebounce(keyword, 500);
+  const { users, isLoading, isFetching, error } =
+    useSearchQuery(debouncedKeyword);
   const { visible, startAnimation } = useModalAnimation(isOpen);
   const inputRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -76,7 +80,8 @@ export default function UserSearch({ isOpen, onClose }: Props) {
           <div className="px-4 pt-5 pb-6">
             <span className="text-2xl font-semibold">검색</span>
           </div>
-          <form onSubmit={onSubmit} className="px-4 pb-5">
+
+          <form onSubmit={onSubmit} className="px-4 pb-4">
             <div className="relative flex items-center py-2 px-3 bg-gray-100 rounded-md">
               <input
                 className="w-full bg-transparent text-gray-400 text-sm placeholder:font-light placeholder:text-gray-300 outline-none"
@@ -103,30 +108,33 @@ export default function UserSearch({ isOpen, onClose }: Props) {
           </form>
 
           {isLoading || isFetching ? (
-            <div className="flex flex-col w-full h-full gap-y-5  py-4 px-4">
+            <div className="flex flex-col w-full h-full py-4 px-5">
               {Array.from({ length: 15 }).map((_, index) => (
                 <SearchSkeleton key={index} />
               ))}
             </div>
           ) : (
-            <div className="flex flex-col flex-grow py-4 px-4 border-t border-gray-300">
-              <p className="py-2 font-semibold">최근 검색 항목</p>
-              <div className="flex flex-grow items-center ">
-                {!isLoading && !error && keyword === '' ? (
-                  <div className="flex justify-center flex-grow ">
+            <div className="flex h-full">
+              {(!isLoading && !error && keyword === '') ||
+              users?.length === 0 ? (
+                <div className="flex flex-grow  flex-col py-4 border-t border-gray-300">
+                  <p className="py-2 px-4 font-semibold">최근 검색 항목</p>
+                  <div className="flex flex-grow justify-center items-center ">
                     <p className="text-sm font-semibold">찾는 사용자가 없음</p>
                   </div>
-                ) : (
-                  <ul className="flex-grow">
+                </div>
+              ) : (
+                <div className="w-full flex flex-col flex-grow items-center ">
+                  <ul className="w-full flex flex-col flex-grow h-full">
                     {users &&
-                      users.map((user: ProfileUser) => (
+                      users.map((user: SearchUser) => (
                         <li key={user.username}>
-                          <p>{user.username}</p>
+                          <UserCard user={user} />
                         </li>
                       ))}
                   </ul>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           )}
         </div>
