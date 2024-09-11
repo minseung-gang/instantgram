@@ -11,7 +11,7 @@ export default function useModalAnimation(isOpen: boolean) {
       return () => clearTimeout(timer);
     } else {
       setStartAnimation(false); // 애니메이션 중지
-      const timer = setTimeout(() => setVisible(false), 300); // 애니메이션 종료 후 모달 닫기
+      const timer = setTimeout(() => setVisible(false), 500); // 애니메이션 종료 후 모달 닫기
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
