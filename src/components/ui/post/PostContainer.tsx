@@ -1,4 +1,3 @@
-import queryOptions from '@/service/post/client/queries';
 import { getDehydratedQuery, Hydrate } from '@/utils/react-query';
 import React from 'react';
 import PostList from './PostList';

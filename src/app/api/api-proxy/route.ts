@@ -5,9 +5,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    console.log('세션', session);
-
     const { searchParams } = new URL(request.url);
     const endpoint = searchParams.get('endpoint');
 

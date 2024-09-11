@@ -3,12 +3,10 @@ import { Open_Sans } from 'next/font/google';
 import './globals.css';
 import { ReactNode } from 'react';
 import AuthProvider from '@/components/auth/AuthProvider';
-import ClientOnly from '@/components/commons/ClientOnly';
-import ReactQueryProviders from '../hooks/useReactQuery';
+import ReactQueryProviders from '../components/commons/ReactQueryProvider';
 import Navbar from '@/components/commons/Navbar';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]/route';
-import useModal from '@/hooks/useModal';
 
 type Props = { children: ReactNode; modal: ReactNode };
 
