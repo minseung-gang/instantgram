@@ -36,7 +36,7 @@ export async function getUser(username: string) {
 
 export async function serachUsers(keyword?: string) {
   const query = keyword
-    ? `&& (name match "${keyword}") || (username match "${keyword}")`
+    ? `&& (name match "*${keyword}*" || username match "*${keyword}*")`
     : '';
   return client.fetch(
     `*[_type=="user" ${query}]{
@@ -46,4 +46,35 @@ export async function serachUsers(keyword?: string) {
     }
     `,
   );
+}
+
+export async function getUserForProfile(username: string) {
+  try {
+    const user = await client.fetch(
+      `*[_type == "user" && username == $username][0]{
+        ...,
+        "id": _id,
+        "following": count(following),
+        "followers": count(followers),
+        "posts": count(*[_type=="post" && author->username == $username])
+      }`,
+      { username },
+    );
+
+    // 쿼리 결과가 없을 경우
+    if (!user) {
+      console.warn(`User with username "${username}" not found.`);
+      return undefined;
+    }
+
+    return {
+      ...user,
+      following: user.following ?? 0,
+      followers: user.followers ?? 0,
+      posts: user.posts ?? 0,
+    };
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    return undefined;
+  }
 }
