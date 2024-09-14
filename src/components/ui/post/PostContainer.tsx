@@ -4,34 +4,11 @@ import PostList from './PostList';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { cookies } from 'next/headers';
-
-async function getPosts() {
-  try {
-    const response = await fetch(`http://localhost:3000/api/posts`, {
-      method: 'GET',
-      headers: {
-        Cookie: cookies().toString(),
-      },
-    });
-
-    const data = await response.json();
-
-    return data;
-  } catch {
-    throw new Error('Failed to fetch post');
-  }
-}
+import queryOptions from '@/service/post/server/queries';
 
 export default async function PostContainer() {
-  const session = await getServerSession(authOptions);
+  const { queryFn, queryKey } = queryOptions.all();
 
-  if (!session) {
-    return <div>Authentication required</div>;
-  }
-  const { queryFn, queryKey } = {
-    queryKey: ['posts'],
-    queryFn: () => getPosts(),
-  };
   const query = await getDehydratedQuery({ queryKey, queryFn });
 
   return (
