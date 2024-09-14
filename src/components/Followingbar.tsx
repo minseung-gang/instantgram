@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useUsers } from '@/service/user/useUserService';
+import { useUsers } from '@/service/user/server/useUserService';
 import CarouselBar from './ui/CarouselBar';
 import Link from 'next/link';
 import { SimpleUser } from '@/model/user';
