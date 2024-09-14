@@ -1,4 +1,4 @@
-import * as PostService from '@/service/post/server/PostService';
+import * as postService from '@/service/post/server/PostService';
 export const queryKeys = {
   all: ['posts'] as const,
 };
@@ -6,7 +6,8 @@ export const queryKeys = {
 const queryOptions = {
   all: () => ({
     queryKey: queryKeys.all,
-    queryFn: () => PostService.getPosts(),
+    queryFn: async () => await postService.getPosts(),
+    keepPreviousData: true,
   }),
 };
 
