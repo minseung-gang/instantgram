@@ -1,4 +1,4 @@
-import { useSearchUsers } from '@/service/user/useUserService';
+import { useSearchUsers } from '@/service/user/client/useUserService';
 import { useEffect } from 'react';
 
 export const useSearchQuery = (keyword: string) => {
