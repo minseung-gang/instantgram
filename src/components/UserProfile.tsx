@@ -3,6 +3,7 @@ import React from 'react';
 import FollowButton from './FollowButton';
 import { getDehydratedQuery, Hydrate } from '@/utils/react-query';
 import queryOptions from '@/service/user/server/queries';
+import Avatar from './Avatar';
 
 type Props = {
   user: ProfileUser;
@@ -10,9 +11,6 @@ type Props = {
 
 export default async function UserProfile({ user }: Props) {
   const { image, username, name, followers, following, posts } = user;
-  const { queryKey, queryFn } = queryOptions.all();
-
-  const query = await getDehydratedQuery({ queryKey, queryFn });
 
   const info = [
     { title: '게시물', data: posts },
@@ -20,17 +18,15 @@ export default async function UserProfile({ user }: Props) {
     { title: '팔로우', data: following },
   ];
 
+  // 마이 프로필 데이터 프리페칭
+  const { queryKey, queryFn } = queryOptions.all();
+  const query = await getDehydratedQuery({ queryKey, queryFn });
+
   return (
     <Hydrate state={{ queries: [query] }}>
-      <section className="grid grid-rows-4 grid-cols-[1fr_2fr] grid-flow-col  h-fit">
-        <section className="row-span-3  flex justify-centermr-4">
-          <div className="w-fit">
-            <img
-              className="w-[150px] aspect-square object-cover rounded-full overflow-hidden"
-              src={image}
-              alt={username}
-            />
-          </div>
+      <section className="grid grid-rows-4 grid-cols-[1fr_2fr] grid-flow-col h-fit gap-x-[80px]">
+        <section className="row-span-3 flex justify-centermr-4 justify-center">
+          <Avatar size="extraLarge" image={image} />
         </section>
         <section className="col-span-2 flex items-center">
           <h2 className="mr-5 text-lg">{username}</h2>
