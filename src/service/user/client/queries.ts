@@ -3,6 +3,7 @@ import * as userService from '@/service/user/client/UserService';
 
 const queryKeys = {
   search: (keyword: string) => ['user', keyword] as const,
+  post: () => ['userPost'] as const,
 };
 
 const queryOptions = {
@@ -13,6 +14,10 @@ const queryOptions = {
     staleTime: 0, // 데이터가 즉시 구식으로 간주됨
     cacheTime: 0, // 캐싱된 데이터가 즉시 사라짐
     refetchOnMount: true,
+  }),
+  post: (username: string, tab: string) => ({
+    queryKey: ['userPost'] as const,
+    queryFn: async () => await userService.getUserPost(username, tab),
   }),
 };
 
