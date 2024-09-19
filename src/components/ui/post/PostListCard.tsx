@@ -17,7 +17,7 @@ type Props = {
 };
 export default function PostListCard({ post }: Props) {
   const { userImage, username, image, createdAt, likes, text, comments } = post;
-  const { isOpen, openModal, closeModal } = useModal();
+  const { modalState, openModal, closeModal } = useModal();
 
   return (
     <article>
@@ -40,7 +40,7 @@ export default function PostListCard({ post }: Props) {
         <p
           className="text-sm text-gray-400 mt-1"
           role="button"
-          onClick={openModal}
+          onClick={() => openModal}
         >
           댓글 {comments}개 모두 보기
         </p>
@@ -53,9 +53,9 @@ export default function PostListCard({ post }: Props) {
         />
         <SmileIcon size="small" />
       </form>
-      {isOpen && (
+      {modalState.isOpen && (
         <ModalPortal>
-          <PostModal onClose={closeModal}>
+          <PostModal onClose={() => closeModal}>
             <PostDetail post={post} />
           </PostModal>
         </ModalPortal>
