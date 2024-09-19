@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-type AvatarSize = 'small' | 'medium' | 'large';
+type AvatarSize = 'small' | 'medium' | 'large' | 'extraLarge';
 type Props = {
   image?: string | null;
   size?: AvatarSize;
@@ -49,6 +49,10 @@ function getSizeClass(size: AvatarSize, type: 'container' | 'image'): string {
     small: { container: 'w-[36px] h-[36px]', image: 'w-[36px] h-[36px]' },
     medium: { container: 'w-11 h-11', image: 'w-[40px] h-[40px]' },
     large: { container: 'w-[68px] h-[68px]', image: 'w-16 h-16' },
+    extraLarge: {
+      container: 'w-[150px] h-[150px]',
+      image: 'w-[150px] h-[150px]',
+    },
   };
 
   return sizeMap[size][type];
@@ -59,6 +63,7 @@ function getPaddingClass(size: AvatarSize): string {
     small: 'p-[0.1rem]',
     medium: 'p-[0.2rem]',
     large: 'p-[3px]',
+    extraLarge: 'p-[8px]',
   };
 
   return paddingMap[size];
