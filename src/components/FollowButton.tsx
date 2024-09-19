@@ -30,13 +30,13 @@ export default function FollowButton({ user }: Props) {
   const following =
     loggedInUser &&
     loggedInUser?.following?.find((item) => item.username == username);
-  const text = following ? '팔로우' : '팔로잉';
+  const text = following ? '팔로잉' : '팔로우';
 
   return (
     <>
       {showButton && (
         <button
-          className={`px-4 py-[6px] ${following ? 'bg-[#0095F6]' : 'bg-gray-200'} ${following ? 'text-white' : 'black'} rounded-md text-sm font-semibold`}
+          className={`px-4 py-[6px] ${following ? 'bg-gray-200' : 'bg-[#0095F6]'} ${following ? 'black' : 'text-white'} rounded-md text-sm font-semibold`}
         >
           {text}
         </button>
