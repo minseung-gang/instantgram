@@ -1,6 +1,5 @@
 'use client';
 
-import { useSearchUsers } from '@/service/user/useUserService';
 import React, { useState, FormEvent, useRef, useEffect } from 'react';
 import ModalPortal from '../ModalPortal';
 import useModalAnimation from '@/hooks/useModalAnimation';
@@ -9,8 +8,6 @@ import { SearchUser } from '@/model/user';
 import { IoCloseCircle } from 'react-icons/io5';
 import { useSearchQuery } from '@/hooks/useSearchArticle';
 import SearchSkeleton from '../SearchSkeleton';
-import Image from 'next/image';
-import Avatar from '@/components/Avatar';
 import UserCard from '@/components/UserCard';
 import useDebounce from '@/hooks/useDebounce';
 
