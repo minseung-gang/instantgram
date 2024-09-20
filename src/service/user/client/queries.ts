@@ -16,7 +16,7 @@ const queryOptions = {
     refetchOnMount: true,
   }),
   post: (username: string, tab: string) => ({
-    queryKey: ['userPost'] as const,
+    queryKey: ['userPost', username, tab],
     queryFn: async () => await userService.getUserPost(username, tab),
   }),
 };
