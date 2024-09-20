@@ -8,7 +8,10 @@ export type ModalAction =
 
 // Define the state structure for the modals
 export type ModalState = {
-  [key in Exclude<ModalType, null>]: { isOpen: boolean; props: object };
+  [key: string]: {
+    isOpen: boolean;
+    props: object;
+  };
 };
 
 // Initial state of the modal reducer
