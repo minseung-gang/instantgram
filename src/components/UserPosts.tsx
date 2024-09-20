@@ -15,11 +15,11 @@ type Props = {
 const tabs = [
   { type: 'posts', icon: <PostIcon />, label: '게시물' },
   {
-    type: 'bookmarks',
+    type: 'saved',
     icon: <BookmarkIcon className="w-3 h-3" />,
     label: '저장됨',
   },
-  { type: 'likes', icon: <HeartIcon className="w-3 h-3" />, label: '좋아요' },
+  { type: 'liked', icon: <HeartIcon className="w-3 h-3" />, label: '좋아요' },
 ];
 export default function UserPosts({ user: { username } }: Props) {
   // /api/users/$${username}/posts
