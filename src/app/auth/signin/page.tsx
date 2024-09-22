@@ -1,10 +1,16 @@
 import React from 'react';
 import { getProviders, signIn } from 'next-auth/react';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/app/auth';
 import { redirect } from 'next/navigation';
 import Signin from '@/components/auth/Signin';
 import Image from 'next/image';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '회원가입',
+  description: 'Instantgram에 회원가입 및 로그인하기',
+};
 
 type Props = {
   searchParams: {
