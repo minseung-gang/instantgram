@@ -3,12 +3,11 @@
 import { SimplePost } from '@/model/post';
 import Image from 'next/image';
 import React, { useState } from 'react';
-import { parseDate } from '@/utils/date';
-import ActionBar from './ActionBar';
-import SmileIcon from '../icons/SmileIcon';
-import ModalPortal from '../ModalPortal';
-import PostModal from '@/components/ui/post/PostModal';
-import PostDetail from '@/components/ui/post/PostDetail';
+import ActionBar from '../ActionBar';
+import SmileIcon from '../ui/icons/SmileIcon';
+import ModalPortal from '../ui/ModalPortal';
+import PostModal from '@/components/post/PostModal';
+import PostDetail from '@/components/post/PostDetail';
 import PostUserAvartar from './PostUserAvartar';
 import useModal from '@/hooks/useModal';
 
@@ -17,7 +16,7 @@ type Props = {
 };
 export default function PostListCard({ post }: Props) {
   const { userImage, username, image, createdAt, likes, text, comments } = post;
-  const { modalState, openModal, closeModal } = useModal();
+  const [openModal, setOpenModal] = useState(false);
 
   return (
     <article>
@@ -34,13 +33,13 @@ export default function PostListCard({ post }: Props) {
         height={500}
         priority
       />
-      <ActionBar likes={likes} username={username} text={text} />
+      <ActionBar post={post} />
 
       {comments > 1 ? (
         <p
           className="text-sm text-gray-400 mt-1"
           role="button"
-          onClick={() => openModal}
+          onClick={() => setOpenModal(true)}
         >
           댓글 {comments}개 모두 보기
         </p>
@@ -53,9 +52,9 @@ export default function PostListCard({ post }: Props) {
         />
         <SmileIcon size="small" />
       </form>
-      {modalState.isOpen && (
+      {openModal && (
         <ModalPortal>
-          <PostModal onClose={() => closeModal}>
+          <PostModal onClose={() => setOpenModal(false)}>
             <PostDetail post={post} />
           </PostModal>
         </ModalPortal>

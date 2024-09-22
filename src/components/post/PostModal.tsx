@@ -1,5 +1,5 @@
 import React from 'react';
-import CloseIcon from '../icons/CloseIcon';
+import CloseIcon from '../ui/icons/CloseIcon';
 
 type Props = {
   children: React.ReactNode;

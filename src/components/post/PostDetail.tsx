@@ -2,11 +2,11 @@ import { SimplePost } from '@/model/post';
 import { useDetailPost } from '@/service/post/client/usePostService';
 import Image from 'next/image';
 import React from 'react';
-import ActionBar from './ActionBar';
+import ActionBar from '../ActionBar';
 import Avatar from '@/components/Avatar';
 import { parseDate } from '@/utils/date';
 import PostUserAvartar from './PostUserAvartar';
-import SmileIcon from '../icons/SmileIcon';
+import SmileIcon from '../ui/icons/SmileIcon';
 
 type Props = {
   post: SimplePost;
@@ -65,7 +65,7 @@ export default function PostDetail({ post }: Props) {
                   )}
               </ul>
             </div>
-            <ActionBar likes={likes} username={username} />
+            <ActionBar post={post} />
             <p className="text-xs text-gray-500">{parseDate(createdAt)}</p>
           </div>
           <form className="flex items-center py-2 pr-4 border-t border-gray-200">

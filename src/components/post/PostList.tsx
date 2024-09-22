@@ -7,9 +7,12 @@ import PostListCard from './PostListCard';
 import { SimplePost } from '@/model/post';
 
 async function fetchPosts() {
-  const response = await fetch('/api/api-proxy?endpoint=posts', {
-    method: 'GET',
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/posts`,
+    {
+      method: 'GET',
+    },
+  );
   if (!response.ok) {
     throw new Error('Failed to fetch posts');
   }
@@ -35,7 +38,7 @@ export default function PostList() {
       )}
       {data && (
         <ul className="flex flex-col gap-y-8 items-center">
-          {data.map((post: SimplePost, idx: number) => (
+          {data?.map((post: SimplePost, idx: number) => (
             <li
               key={post.id}
               className={`py-3 ${idx !== data.length - 1 ? 'border-b border-gray-300' : ''} w-[min(470px,100%)]`}

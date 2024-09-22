@@ -2,7 +2,7 @@ import { getDehydratedQuery, Hydrate } from '@/utils/react-query';
 import React from 'react';
 import PostList from './PostList';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/app/auth';
 import { cookies } from 'next/headers';
 import queryOptions from '@/service/post/server/queries';
 
