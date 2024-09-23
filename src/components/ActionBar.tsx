@@ -9,7 +9,6 @@ import HeartFillIcon from './ui/icons/HeartFillIcon';
 import BookmarkFillIcon from './ui/icons/BookmarkFillIcon';
 import { SimplePost } from '@/model/post';
 import { useSession } from 'next-auth/react';
-import { useMutation } from '@tanstack/react-query';
 import { useLikePost } from '@/service/post/client/usePostService';
 
 type Props = {
@@ -21,20 +20,21 @@ export default function ActionBar({ post }: Props) {
   const { data: session } = useSession();
   const user = session?.user;
   const currentUser = user?.username ?? '';
-  const liked = user ? likes.includes(user.username) : false;
+  const liked = !!(user && likes?.includes(currentUser));
+
   const [bookmarked, setBookmarked] = useState(false);
-  const mutation = useLikePost(id, currentUser);
+  const likeMutation = useLikePost(id, currentUser);
 
   const handleLike = () => {
-    console.log('클릭');
-    mutation.mutate(liked);
+    likeMutation.mutate(liked);
   };
+
   return (
     <>
       <div className="flex justify-between my-3 ">
         <ToggleButton
           toggled={liked}
-          onToggle={() => handleLike()}
+          onToggle={handleLike}
           onIcon={<HeartFillIcon />}
           offIcon={<HeartIcon />}
         />
@@ -46,7 +46,7 @@ export default function ActionBar({ post }: Props) {
         />
       </div>
       <div>
-        {likes?.length > 1 ? (
+        {likes?.length >= 1 ? (
           <span className="text-sm mb-2 flex">
             <p className="text-sm font-semibold">{likes[0]}</p>님&nbsp;
             <p className="text-sm font-semibold">여러명</p>이 좋아합니다.
