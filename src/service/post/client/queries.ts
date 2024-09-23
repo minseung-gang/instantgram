@@ -32,6 +32,7 @@ const queryOptions = {
 
   comment: ({ postId, commentId }: { postId: string; commentId: number }) => ({
     queryKey: queryKeys.detailComment({ postId, commentId }),
+
     queryFn: () => PostService.getComment({ postId, commentId }),
   }),
 
@@ -39,17 +40,22 @@ const queryOptions = {
     mutationFn: async (liked: boolean) =>
       await PostService.updateLike(liked, postId),
 
-    onMutate: async () =>
-      await PostService.OptimisticLikeUpdate(queryClient, postId, currentUser),
+    onMutate: async (liked: boolean) =>
+      await PostService.OptimisticLikeUpdate(
+        queryClient,
+        postId,
+        currentUser,
+        liked,
+      ),
 
     onError: (context: { previousPosts: SimplePost[] | undefined }) => {
       // 오류 발생 시 원래 상태로 복구
-      queryClient.setQueryData(queryKeys.all, context.previousPosts);
+      queryClient.setQueryData(['posts'], context.previousPosts);
     },
 
     onSettled: () => {
       // 서버 응답 후 최신 데이터 가져오기 (이 부분에서 무효화 후 데이터 fetch)
-      queryClient.invalidateQueries({ queryKey: queryKeys.all });
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
     },
   }),
 };
