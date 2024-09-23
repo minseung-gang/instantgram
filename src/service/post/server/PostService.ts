@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 
 export async function getPosts() {
   try {
-    const response = await fetch(`http://localhost:3000/api/posts`, {
+    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/posts`, {
       method: 'GET',
       headers: {
         Cookie: cookies().toString(),
