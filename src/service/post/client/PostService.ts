@@ -50,30 +50,29 @@ export async function OptimisticLikeUpdate(
   queryClient: QueryClient,
   postId: string,
   currentUser: string,
+  liked: boolean,
 ) {
-  return async (liked: boolean) => {
-    // 좋아요가 눌린 상태를 즉시 업데이트
-    await queryClient.cancelQueries({ queryKey: ['posts'] });
+  // 좋아요가 눌린 상태를 즉시 업데이트
+  await queryClient.cancelQueries({ queryKey: ['posts'] });
 
-    const previousPosts = queryClient.getQueryData<SimplePost[]>(['posts']);
+  const previousPosts = queryClient.getQueryData<SimplePost[]>(['posts']);
 
-    if (previousPosts) {
-      const updatedPosts = previousPosts.map((post) => {
-        if (post.id === postId) {
-          const likes = post.likes || []; // 좋아요가 없을 시 빈 배열 처리
-          return {
-            ...post,
-            likes: liked
-              ? likes.filter((username) => username !== currentUser) // 좋아요 삭제
-              : [...likes, currentUser], // 좋아요 추가
-          };
-        }
-        return post;
-      });
+  if (previousPosts) {
+    const updatedPosts = previousPosts.map((post) => {
+      if (post.id === postId) {
+        const likes = post.likes || []; // 좋아요가 없을 시 빈배열 처리
+        return {
+          ...post,
+          likes: liked
+            ? likes.filter((username) => username !== currentUser) // 좋아요 삭제
+            : [...likes, currentUser], // 좋아요 추가
+        };
+      }
+      return post;
+    });
 
-      queryClient.setQueryData(['posts'], updatedPosts);
-    }
+    queryClient.setQueryData(['posts'], updatedPosts);
+  }
 
-    return { previousPosts }; //오류가 발생했을 때 원래의 상태로 복구하기 위해서 백업 데이터를 반환
-  };
+  return { previousPosts };
 }
