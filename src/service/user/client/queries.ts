@@ -1,5 +1,6 @@
 import { HomeUser } from '@/model/user';
 import * as userService from '@/service/user/client/UserService';
+import { QueryClient } from '@tanstack/react-query';
 
 const queryKeys = {
   search: (keyword: string) => ['user', keyword] as const,
@@ -16,8 +17,25 @@ const queryOptions = {
     refetchOnMount: true,
   }),
   post: (username: string, tab: string) => ({
-    queryKey: ['userPost', username, tab],
+    queryKey: ['userPost', tab],
     queryFn: async () => await userService.getUserPost(username, tab),
+  }),
+  bookmark: (queryClient: QueryClient, postId: string) => ({
+    mutationFn: async (bookmark: boolean) =>
+      await userService.updateBookmark(postId, bookmark),
+
+    onMutate: async (bookmark: boolean) =>
+      await userService.OptimisticBookmark(queryClient, postId, bookmark),
+
+    onError: (context: { previousUser: HomeUser[] | undefined }) => {
+      // 오류 발생 시 원래 상태로 복구
+      queryClient.setQueryData(['users'], context.previousUser);
+    },
+
+    onSettled: () => {
+      // 서버 응답 후 최신 데이터 가져오기 (이 부분에서 무효화 후 데이터 fetch)
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
   }),
 };
 
