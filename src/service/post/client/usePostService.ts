@@ -1,4 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+  QueryClient,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import queryOptions from '@/service/post/client/queries';
 
@@ -18,4 +23,9 @@ export function useComment({
   commentId: number;
 }) {
   return useQuery(queryOptions.comment({ postId, commentId }));
+}
+
+export function useLikePost(postId: string, currentUser: string) {
+  const queryClient = useQueryClient();
+  return useMutation(queryOptions.like(queryClient, postId, currentUser));
 }
