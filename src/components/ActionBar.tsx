@@ -1,18 +1,17 @@
 `use client`;
 
-import React, { useState } from 'react';
+import React from 'react';
 import HeartIcon from './ui/icons/HeartIcon';
 import BookmarkIcon from './ui/icons/BookmarkIcon';
-import SmileIcon from './ui/icons/SmileIcon';
+
 import ToggleButton from './ui/ToggleButton';
 import HeartFillIcon from './ui/icons/HeartFillIcon';
 import BookmarkFillIcon from './ui/icons/BookmarkFillIcon';
 import { SimplePost } from '@/model/post';
-import { useSession } from 'next-auth/react';
+
 import { useLikePost } from '@/service/post/client/usePostService';
 import { useBookMark } from '@/service/user/client/useUserService';
-import { useUsers } from '@/service/user/server/useUserService';
-import { queryKeys } from '@/service/post/client/queries';
+
 import { useQuery } from '@tanstack/react-query';
 
 type Props = {
@@ -39,9 +38,6 @@ export default function ActionBar({ post }: Props) {
     queryKey: ['users'],
     queryFn: fetchUser,
   });
-  if (id === '3ecba9f7-2c4d-4f75-b877-441c47d9b602') {
-    console.log('user', user, 'postId', id);
-  }
 
   const liked = user ? likes.includes(user.username) : false;
   const bookmarked = user?.bookmarks.includes(id) ?? false;
