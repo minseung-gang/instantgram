@@ -4,16 +4,18 @@ import PostList from './PostList';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/auth';
 import { cookies } from 'next/headers';
-import queryOptions from '@/service/post/server/queries';
+import postQueryOptions from '@/service/post/server/queries';
+import userQueryOptions from '@/service/user/server/queries';
 
 export default async function PostContainer() {
-  const { queryFn, queryKey } = queryOptions.all();
+  const postQuery = await getDehydratedQuery(postQueryOptions.all());
+  const userQuery = await getDehydratedQuery(userQueryOptions.all());
+  const session = await getServerSession(authOptions);
 
-  const query = await getDehydratedQuery({ queryKey, queryFn });
-
+  const user = session?.user?.username || '';
   return (
-    <Hydrate state={{ queries: [query] }}>
-      <PostList />
+    <Hydrate state={{ queries: [postQuery, userQuery] }}>
+      <PostList user={user} />
     </Hydrate>
   );
 }
