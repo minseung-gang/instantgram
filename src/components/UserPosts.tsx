@@ -7,7 +7,6 @@ import PostIcon from './ui/icons/PostIcon';
 import BookmarkIcon from './ui/icons/BookmarkIcon';
 import HeartIcon from './ui/icons/HeartIcon';
 import PostGrid from './PostGrid';
-import queryOptions from '@/service/user/client/queries';
 
 type Props = {
   user: ProfileUser;
@@ -21,7 +20,7 @@ const tabs = [
   },
   { type: 'liked', icon: <HeartIcon className="w-3 h-3" />, label: '좋아요' },
 ];
-export default function UserPosts({ user: { username } }: Props) {
+export default function UserPosts({ user }: Props) {
   // /api/users/$${username}/posts
   // /api/users/$${username}/liked
   // /api/users/$${username}/bookmarks
@@ -45,7 +44,7 @@ export default function UserPosts({ user: { username } }: Props) {
           </li>
         ))}
       </ul>
-      <PostGrid username={username} query={query} />
+      <PostGrid username={user.username} query={query} />
     </section>
   );
 }
