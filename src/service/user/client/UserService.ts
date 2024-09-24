@@ -26,7 +26,6 @@ export async function getUserPost(username: string, tab: string) {
     );
 
     const data = await response.json();
-    console.log('username', username, 'tab', tab, 'data', data);
 
     return data;
   } catch {
@@ -40,7 +39,7 @@ export async function updateBookmark(postId: string, bookmark: boolean) {
       method: 'PUT',
       body: JSON.stringify({ id: postId, bookmark }),
     });
-    console.log(response, 'response');
+
     return response.json();
   } catch (err) {
     throw console.log(err, 'Falled to update bookmark');
