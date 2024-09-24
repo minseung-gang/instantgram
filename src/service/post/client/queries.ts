@@ -41,12 +41,7 @@ const queryOptions = {
       await PostService.updateLike(liked, postId),
 
     onMutate: async (liked: boolean) =>
-      await PostService.OptimisticLikeUpdate(
-        queryClient,
-        postId,
-        currentUser,
-        liked,
-      ),
+      await PostService.OptimisticLike(queryClient, postId, currentUser, liked),
 
     onError: (context: { previousPosts: SimplePost[] | undefined }) => {
       // 오류 발생 시 원래 상태로 복구
