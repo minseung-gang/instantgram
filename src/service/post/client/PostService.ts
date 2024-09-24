@@ -46,7 +46,7 @@ export async function updateLike(like: boolean, id: string) {
   }
 }
 
-export async function OptimisticLikeUpdate(
+export async function OptimisticLike(
   queryClient: QueryClient,
   postId: string,
   currentUser: string,
