@@ -15,7 +15,7 @@ export default async function PostContainer() {
   const user = session?.user?.username || '';
   return (
     <Hydrate state={{ queries: [postQuery, userQuery] }}>
-      <PostList user={user} />
+      <PostList />
     </Hydrate>
   );
 }
