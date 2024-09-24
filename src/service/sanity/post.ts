@@ -64,6 +64,8 @@ export async function getLikedPostsOf(username: string) {
       | order(_createdAt desc){
           ${simplePostProjection}
         }`,
+      {},
+      { cache: 'no-store' },
     )
     .then(mapPosts);
 }
@@ -75,6 +77,8 @@ export async function getSavedPostsOf(username: string) {
       | order(_createdAt desc){
         ${simplePostProjection}
       }`,
+      {},
+      { cache: 'no-store' },
     )
     .then(mapPosts);
 }
@@ -88,7 +92,6 @@ function mapPosts(posts: SimplePost[]) {
 }
 
 export async function likePost(postId: string, userId: string) {
-  console.log('라잌', postId, userId);
   return client
     .patch(postId) //
     .setIfMissing({ likes: [] })
@@ -102,7 +105,6 @@ export async function likePost(postId: string, userId: string) {
 }
 
 export async function dislikePost(postId: string, userId: string) {
-  console.log('디스라잌', postId, userId);
   return client
     .patch(postId)
     .unset([`likes[_ref=="${userId}"]`])
