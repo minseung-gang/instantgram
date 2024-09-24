@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import queryOptions from './queries';
 import { SimplePost } from '@/model/post';
 
@@ -7,4 +7,9 @@ export function useSearchUsers(keyword: string) {
 }
 export function useUserPost(username: string, tab: string) {
   return useQuery<SimplePost[]>(queryOptions.post(username, tab));
+}
+
+export function useBookMark(postId: string) {
+  const queryClient = useQueryClient();
+  return useMutation(queryOptions.bookmark(queryClient, postId));
 }
