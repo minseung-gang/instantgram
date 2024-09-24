@@ -11,6 +11,8 @@ import SearchSkeleton from '../SearchSkeleton';
 import UserCard from '@/components/UserCard';
 import useDebounce from '@/hooks/useDebounce';
 
+export const dynamic = 'force-dynamic';
+
 type Props = {
   isOpen: boolean;
   onClose: () => void;
