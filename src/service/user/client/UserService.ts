@@ -1,4 +1,5 @@
-import { cookies } from 'next/headers';
+import { HomeUser } from '@/model/user';
+import { QueryClient } from '@tanstack/react-query';
 
 export async function serachUser(keyword: string) {
   try {
@@ -16,7 +17,6 @@ export async function serachUser(keyword: string) {
 }
 
 export async function getUserPost(username: string, tab: string) {
-  console.log('username', username, 'tab', tab);
   try {
     const response = await fetch(
       ` ${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/users/${username}/${tab}`,
@@ -26,9 +26,45 @@ export async function getUserPost(username: string, tab: string) {
     );
 
     const data = await response.json();
+    console.log('username', username, 'tab', tab, 'data', data);
 
     return data;
   } catch {
     throw new Error('Failed to fetch user');
   }
+}
+
+export async function updateBookmark(postId: string, bookmark: boolean) {
+  try {
+    const response = await fetch(`/api/bookmarks`, {
+      method: 'PUT',
+      body: JSON.stringify({ id: postId, bookmark }),
+    });
+    console.log(response, 'response');
+    return response.json();
+  } catch (err) {
+    throw console.log(err, 'Falled to update bookmark');
+  }
+}
+
+export async function OptimisticBookmark(
+  queryClient: QueryClient,
+  postId: string,
+  bookmarked: boolean,
+) {
+  // 북마크 눌린 상태를 즉시 업데이트
+  await queryClient.cancelQueries({ queryKey: ['users'] });
+
+  const previousUser = queryClient.getQueryData<HomeUser>(['users']);
+
+  if (previousUser) {
+    const updatedUser = {
+      ...previousUser,
+      bookmarks: bookmarked
+        ? previousUser.bookmarks.filter((b) => b !== postId)
+        : [...previousUser.bookmarks, postId],
+    };
+    queryClient.setQueryData(['users'], updatedUser);
+  }
+  return { previousUser };
 }
