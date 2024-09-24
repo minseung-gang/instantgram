@@ -10,25 +10,50 @@ import BookmarkFillIcon from './ui/icons/BookmarkFillIcon';
 import { SimplePost } from '@/model/post';
 import { useSession } from 'next-auth/react';
 import { useLikePost } from '@/service/post/client/usePostService';
+import { useBookMark } from '@/service/user/client/useUserService';
+import { useUsers } from '@/service/user/server/useUserService';
+import { queryKeys } from '@/service/post/client/queries';
+import { useQuery } from '@tanstack/react-query';
 
 type Props = {
   post: SimplePost;
 };
 
+async function fetchUser() {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/me`,
+    {
+      method: 'GET',
+    },
+  );
+  if (!response.ok) {
+    throw new Error('Failed to fetch posts');
+  }
+  return response.json();
+}
+
 export default function ActionBar({ post }: Props) {
   const { id, likes, username, text } = post;
-  const { data: session } = useSession();
-  const user = session?.user;
-  const currentUser = user?.username ?? '';
-  const liked = !!(user && likes?.includes(currentUser));
 
-  const [bookmarked, setBookmarked] = useState(false);
-  const likeMutation = useLikePost(id, currentUser);
+  const { data: user } = useQuery({
+    queryKey: ['users'],
+    queryFn: fetchUser,
+  });
+  if (id === '3ecba9f7-2c4d-4f75-b877-441c47d9b602') {
+    console.log('user', user, 'postId', id);
+  }
+
+  const liked = user ? likes.includes(user.username) : false;
+  const bookmarked = user?.bookmarks.includes(id) ?? false;
+  const likeMutation = useLikePost(id, user);
+  const bookmarkMutation = useBookMark(id);
 
   const handleLike = () => {
-    likeMutation.mutate(liked);
+    user && likeMutation.mutate(liked);
   };
-
+  const handleBookamrk = () => {
+    user && bookmarkMutation.mutate(bookmarked);
+  };
   return (
     <>
       <div className="flex justify-between my-3 ">
@@ -40,7 +65,7 @@ export default function ActionBar({ post }: Props) {
         />
         <ToggleButton
           toggled={bookmarked}
-          onToggle={setBookmarked}
+          onToggle={handleBookamrk}
           onIcon={<BookmarkFillIcon />}
           offIcon={<BookmarkIcon />}
         />
