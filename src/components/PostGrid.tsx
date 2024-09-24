@@ -12,17 +12,17 @@ export default function PostGrid({ username, query }: Props) {
   const { data: posts, isLoading, error } = useUserPost(username, query);
 
   return (
-    <div className="flex justify-center">
+    <div className="w-full text-center">
       {isLoading && <ClipLoader />}
-      {posts && (
-        <ul className="w-full grid grid-cols-3 gap-1">
-          {posts.map((post, idx) => (
+
+      <ul className="w-full grid grid-cols-3 gap-1">
+        {posts &&
+          posts.map((post, idx) => (
             <li key={post.id} className="aspect-square relative">
               <PostGridCard post={post} priority={idx < 6} />
             </li>
           ))}
-        </ul>
-      )}
+      </ul>
     </div>
   );
 }
