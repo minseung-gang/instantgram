@@ -2,22 +2,28 @@
 
 import { SimplePost } from '@/model/post';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import ActionBar from '../ActionBar';
 import SmileIcon from '../ui/icons/SmileIcon';
 import ModalPortal from '../ui/ModalPortal';
 import PostModal from '@/components/post/PostModal';
 import PostDetail from '@/components/post/PostDetail';
 import PostUserAvartar from './PostUserAvartar';
-import useModal from '@/hooks/useModal';
+import { useComments } from '@/service/post/client/usePostService';
 
 type Props = {
   post: SimplePost;
 };
 export default function PostListCard({ post }: Props) {
-  const { userImage, username, image, createdAt, likes, text, comments } = post;
+  const { id, userImage, username, image, createdAt, comments } = post;
   const [openModal, setOpenModal] = useState(false);
-
+  const [comment, setComment] = useState('');
+  const { mutate: postComment } = useComments(id);
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    postComment(comment);
+    setComment('');
+  };
   return (
     <article>
       <PostUserAvartar
@@ -44,12 +50,22 @@ export default function PostListCard({ post }: Props) {
           댓글 {comments}개 모두 보기
         </p>
       ) : null}
-      <form className="flex items-center">
+      <form className="flex items-center" onSubmit={handleSubmit}>
         <input
           className="w-full border-none outline-none mt-2 pb-2 text-sm"
           type="text"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
           placeholder="댓글 달기..."
         />
+        {comment.length > 0 && (
+          <div
+            className="text-sm min-w-fit mx-3 font-semibold text-[#0095F6]"
+            onClick={handleSubmit}
+          >
+            게시
+          </div>
+        )}
         <SmileIcon size="small" />
       </form>
       {openModal && (
