@@ -3,19 +3,19 @@
 import React from 'react';
 import HeartIcon from './ui/icons/HeartIcon';
 import BookmarkIcon from './ui/icons/BookmarkIcon';
-
 import ToggleButton from './ui/ToggleButton';
 import HeartFillIcon from './ui/icons/HeartFillIcon';
 import BookmarkFillIcon from './ui/icons/BookmarkFillIcon';
 import { SimplePost } from '@/model/post';
-
 import { useLikePost } from '@/service/post/client/usePostService';
 import { useBookMark } from '@/service/user/client/useUserService';
-
 import { useQuery } from '@tanstack/react-query';
+import { parseDate } from '@/utils/date';
+import CommentForm from './CommentForm';
 
 type Props = {
   post: SimplePost;
+  children?: React.ReactNode;
 };
 
 async function fetchUser() {
@@ -31,7 +31,7 @@ async function fetchUser() {
   return response.json();
 }
 
-export default function ActionBar({ post }: Props) {
+export default function ActionBar({ post, children }: Props) {
   const { id, likes, username, text } = post;
 
   const { data: user } = useQuery({
@@ -40,8 +40,9 @@ export default function ActionBar({ post }: Props) {
   });
 
   const liked = user ? likes.includes(user.username) : false;
-  const bookmarked = user?.bookmarks.includes(id) ?? false;
-  const likeMutation = useLikePost(id, user);
+  const bookmarked = user?.bookmarks?.includes(id) ?? false;
+
+  const likeMutation = useLikePost(id, user.username);
   const bookmarkMutation = useBookMark(id);
 
   const handleLike = () => {
@@ -50,6 +51,7 @@ export default function ActionBar({ post }: Props) {
   const handleBookamrk = () => {
     user && bookmarkMutation.mutate(bookmarked);
   };
+
   return (
     <>
       <div className="flex justify-between my-3 ">
@@ -88,6 +90,7 @@ export default function ActionBar({ post }: Props) {
           </p>
         )}
       </div>
+      {children}
     </>
   );
 }
