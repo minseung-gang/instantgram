@@ -1,3 +1,5 @@
+'use client';
+
 import { useUserPost } from '@/service/user/client/useUserService';
 import React from 'react';
 import { ClipLoader } from 'react-spinners';
