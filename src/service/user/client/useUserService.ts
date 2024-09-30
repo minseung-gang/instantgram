@@ -13,3 +13,8 @@ export function useBookMark(postId: string) {
   const queryClient = useQueryClient();
   return useMutation(queryOptions.bookmark(queryClient, postId));
 }
+
+export function useFollow(targetId: string, username: string) {
+  const queryClient = useQueryClient();
+  return useMutation(queryOptions.follow(queryClient, targetId, username));
+}
