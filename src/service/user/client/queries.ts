@@ -1,6 +1,8 @@
+import revalidateProfileUser from '@/actions/actions';
 import { HomeUser } from '@/model/user';
 import * as userService from '@/service/user/client/UserService';
 import { QueryClient } from '@tanstack/react-query';
+import { revalidatePath } from 'next/cache';
 
 const queryKeys = {
   search: (keyword: string) => ['user', keyword] as const,
@@ -17,8 +19,11 @@ const queryOptions = {
     refetchOnMount: true,
   }),
   post: (username: string, tab: string) => ({
-    queryKey: ['userPost', tab],
+    queryKey: ['userPost', username, tab],
     queryFn: async () => await userService.getUserPost(username, tab),
+    cacheTime: 0,
+    staleTime: 0,
+    placeholderData: [],
   }),
   bookmark: (queryClient: QueryClient, postId: string) => ({
     mutationFn: async (bookmark: boolean) =>
@@ -36,6 +41,17 @@ const queryOptions = {
       // 서버 응답 후 최신 데이터 가져오기 (이 부분에서 무효화 후 데이터 fetch)
       queryClient.invalidateQueries({ queryKey: ['userPost', 'saved'] });
       queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+  }),
+  follow: (queryClient: QueryClient, targetId: string, username: string) => ({
+    mutationFn: async (isFollow: boolean) => {
+      return await userService.updateFollow(targetId, isFollow);
+    },
+
+    onError: (context: { previousUser: HomeUser | undefined }) => {
+      // 오류 발생 시 원래 상태로 복구
+
+      queryClient.setQueryData(['users'], context.previousUser);
     },
   }),
 };
