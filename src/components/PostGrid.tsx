@@ -20,7 +20,7 @@ export default function PostGrid({ username, query }: Props) {
       <ul className="w-full grid grid-cols-3 gap-1">
         {posts &&
           posts.map((post, idx) => (
-            <li key={post.id} className="aspect-square relative">
+            <li key={post.id} className="aspect-square relative cursor-pointer">
               <PostGridCard post={post} priority={idx < 6} />
             </li>
           ))}
