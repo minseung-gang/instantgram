@@ -1,4 +1,4 @@
-import { HomeUser } from '@/model/user';
+import { HomeUser, ProfileUser } from '@/model/user';
 import { QueryClient } from '@tanstack/react-query';
 
 export async function serachUser(keyword: string) {
@@ -18,12 +18,9 @@ export async function serachUser(keyword: string) {
 
 export async function getUserPost(username: string, tab: string) {
   try {
-    const response = await fetch(
-      ` ${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/users/${username}/${tab}`,
-      {
-        method: 'GET',
-      },
-    );
+    const response = await fetch(`/api/users/${username}/${tab}`, {
+      method: 'GET',
+    });
 
     const data = await response.json();
 
@@ -63,7 +60,43 @@ export async function OptimisticBookmark(
         ? previousUser.bookmarks.filter((b) => b !== postId)
         : [...previousUser.bookmarks, postId],
     };
+
     queryClient.setQueryData(['users'], updatedUser);
   }
+  return { previousUser };
+}
+
+export async function updateFollow(targetId: string, follow: boolean) {
+  try {
+    const response = await fetch(`/api/follow`, {
+      method: 'PUT',
+      body: JSON.stringify({ id: targetId, follow }),
+    });
+
+    return response.json();
+  } catch (err) {
+    throw console.log(err, 'Falled to update bookmark');
+  }
+}
+export async function OptimisticFollow(
+  queryClient: QueryClient,
+  isFollow: boolean,
+  username: string,
+) {
+  await queryClient.cancelQueries({ queryKey: ['users'] });
+
+  const previousUser = queryClient.getQueryData<HomeUser>(['users']);
+
+  if (previousUser) {
+    const updatedUser = {
+      ...previousUser,
+      following: isFollow
+        ? [...previousUser.following, { username, image: '' }]
+        : previousUser.following.filter((user) => user.username !== username),
+    };
+
+    queryClient.setQueryData(['users'], updatedUser);
+  }
+
   return { previousUser };
 }
