@@ -4,7 +4,6 @@ import React from 'react';
 import Avatar from './Avatar';
 import { AuthUser } from '@/model/user';
 import Link from 'next/link';
-import { useDetailPost } from '@/service/post/client/usePostService';
 
 type Props = {
   user: AuthUser;
@@ -20,7 +19,7 @@ export default function UserSidebar({ user }: Props) {
           <Avatar image={image} size="small" />
         </Link>
         <div>
-          <Link href={`/user/${name}`}>
+          <Link href={`/user/${username}`}>
             <p className="text-sm font-semibold leading-4">{username}</p>
           </Link>
           <p className="text-sm text-gray-500 leading-4">{name}</p>
