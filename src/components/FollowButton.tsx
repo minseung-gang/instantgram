@@ -1,8 +1,12 @@
 'use client';
 
+import revalidateProfileUser from '@/actions/actions';
 import { HomeUser, ProfileUser } from '@/model/user';
 import { useFollow } from '@/service/user/client/useUserService';
 import { useQuery } from '@tanstack/react-query';
+import { startTransition, useState, useTransition } from 'react';
+
+import { ClipLoader } from 'react-spinners';
 
 type Props = {
   user: ProfileUser;
@@ -23,6 +27,7 @@ export default function FollowButton({ user }: Props) {
   const { data: loggedInUser } = useQuery<HomeUser>({
     queryKey: ['users'],
     queryFn: async () => fetchUser(),
+    staleTime: 0,
   });
 
   const showButton = loggedInUser && loggedInUser?.username !== username;
@@ -30,20 +35,45 @@ export default function FollowButton({ user }: Props) {
     loggedInUser &&
     loggedInUser?.following?.find((item) => item.username === username);
   const text = following ? '팔로잉' : '팔로우';
-
-  const { mutate: toggleFollow } = useFollow(id, user.username);
-
-  const handleFollow = () => {
-    user && toggleFollow(!following);
+  const [isPending, startTransition] = useTransition();
+  const [isFetching, setIsFetching] = useState(false);
+  const isUpdating = isPending || isFetching;
+  const { mutate: toggleFollow } = useFollow(id, username);
+  const disabled = text === '팔로잉';
+  const handleFollow = async () => {
+    setIsFetching(true);
+    toggleFollow(!following, {
+      onSettled: () => {
+        setIsFetching(false);
+        startTransition(() => {
+          revalidateProfileUser(username);
+        });
+      },
+      onError: () => {
+        setIsFetching(false); // 에러 발생 시 로딩 상태 해제
+      },
+    });
   };
+
   return (
     <>
       {showButton && (
         <button
-          className={`px-4 py-[6px] ${following ? 'bg-gray-200' : 'bg-[#0095F6]'} ${following ? 'black' : 'text-white'} rounded-md text-sm font-semibold`}
+          className={`relative px-4 py-[6px] ${disabled ? 'bg-gray-200' : 'bg-[#0095F6]'} ${disabled ? 'black' : 'text-white'} rounded-md text-sm font-semibold`}
           onClick={handleFollow}
         >
-          {text}
+          <div className={`${isUpdating ? 'invisible' : 'visible'}`}>
+            {text}
+          </div>
+
+          {isUpdating && (
+            <div className="absolute inset-0 flex justify-center items-center">
+              <ClipLoader
+                className={`!w-4 !h-4 `}
+                color={disabled ? 'gray' : 'white'}
+              />
+            </div>
+          )}
         </button>
       )}
     </>
