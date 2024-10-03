@@ -1,12 +1,14 @@
 import { SimplePost } from '@/model/post';
 import { QueryClient } from '@tanstack/react-query';
+import { cookies } from 'next/headers';
 
 export async function getDetailPost(postId: string) {
   try {
-    const response = await fetch(`/api/posts/proxy?postId=${postId}`, {
+    console.log(postId, '게시물아이디');
+    const response = await fetch(`/api/posts/${postId}`, {
       method: 'GET',
     });
-
+    console.log('게시물 아이디', postId);
     if (!response.ok) {
       throw new Error('Failed to fetch post');
     }
@@ -17,20 +19,6 @@ export async function getDetailPost(postId: string) {
     console.error('Error fetching post:', error);
     throw new Error('Failed to fetch post');
   }
-}
-
-export function getComments(postId: string) {
-  return fetch(`/api/${postId}/comments`);
-}
-
-export function getComment({
-  postId,
-  commentId,
-}: {
-  postId: string;
-  commentId: number;
-}) {
-  return fetch(`/api/${postId}/comments/${commentId}`);
 }
 
 export async function updateLike(like: boolean, id: string) {
@@ -51,16 +39,19 @@ export async function OptimisticLike(
   postId: string,
   currentUser: string,
   liked: boolean,
+  queryKey: string[],
 ) {
   // 좋아요가 눌린 상태를 즉시 업데이트
-  await queryClient.cancelQueries({ queryKey: ['posts'] });
 
-  const previousPosts = queryClient.getQueryData<SimplePost[]>(['posts']);
+  queryClient.cancelQueries({ queryKey: queryKey });
+
+  const previousPosts = queryClient.getQueryData<SimplePost[]>(queryKey);
 
   if (previousPosts) {
     const updatedPosts = previousPosts.map((post) => {
       if (post.id === postId) {
         const likes = post.likes || []; // 좋아요가 없을 시 빈배열 처리
+
         return {
           ...post,
           likes: liked
@@ -71,8 +62,46 @@ export async function OptimisticLike(
       return post;
     });
 
-    queryClient.setQueryData(['posts'], updatedPosts);
+    queryClient.setQueryData(queryKey, updatedPosts);
   }
 
+  return { previousPosts };
+}
+
+export async function addComment(comment: string, id: string) {
+  try {
+    const response = await fetch(`/api/comments`, {
+      method: 'POST',
+      body: JSON.stringify({ id, comment }),
+    });
+
+    return response.json();
+  } catch (err) {
+    throw console.log(err, 'Falled to update like');
+  }
+}
+
+export async function OptimisticComment(
+  queryClient: QueryClient,
+  postId: string,
+) {
+  // 북마크 눌린 상태를 즉시 업데이트
+  await queryClient.cancelQueries({ queryKey: ['posts'] });
+
+  const previousPosts = queryClient.getQueryData<SimplePost[]>(['posts']);
+
+  if (previousPosts) {
+    const updatedPosts = previousPosts.map((post) => {
+      if (post.id === postId) {
+        return {
+          ...post,
+          comments: post.comments + 1,
+        };
+      }
+      return post;
+    });
+    queryClient.setQueryData(['posts'], updatedPosts);
+    console.log('업데이트 게시물', updatedPosts);
+  }
   return { previousPosts };
 }
