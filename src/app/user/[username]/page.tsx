@@ -3,7 +3,7 @@ import React, { cache } from 'react';
 import UserProfile from '@/components/UserProfile';
 import { notFound } from 'next/navigation';
 import { getDehydratedQuery, Hydrate } from '@/utils/react-query';
-import queryOptions from '@/service/user/server/queries';
+import queryOptions from '@/service/post/client/queries';
 import UserPosts from '@/components/UserPosts';
 import { Metadata } from 'next';
 
@@ -34,7 +34,7 @@ export default async function Userpage({ params: { username } }: Props) {
 export async function generateMetadata({
   params: { username },
 }: Props): Promise<Metadata> {
-  const user = await getUser(username);
+  const user = await getUserForProfile(username);
   return {
     title: `${user?.name} (@${user?.username}) · Instantgram Photos`,
     description: `${user?.name}'s all Instantgram posts`,
