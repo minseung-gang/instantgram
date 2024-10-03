@@ -5,6 +5,7 @@ import ModalPortal from './ui/ModalPortal';
 import PostModal from './post/PostModal';
 import PostDetail from './post/PostDetail';
 import { signIn, useSession } from 'next-auth/react';
+import { CacheKeyContext } from '@/app/context/CacheKeyContext';
 
 type Props = {
   post: SimplePost;
@@ -16,6 +17,7 @@ export default function PostGridCard({ post, priority = false }: Props) {
   const [openModal, setOpenModal] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const { data: session } = useSession();
+
   const handleOpenPost = () => {
     if (!session?.user) {
       return signIn();
@@ -23,7 +25,9 @@ export default function PostGridCard({ post, priority = false }: Props) {
     setOpenModal(true);
   };
   return (
-    <>
+    <CacheKeyContext.Provider
+      value={{ postsKey: ['userPost', session?.user?.username ?? '', 'saved'] }}
+    >
       <div
         className={`relative w-full h-full ${isLoaded ? 'block' : 'hidden'}`}
       >
@@ -45,6 +49,6 @@ export default function PostGridCard({ post, priority = false }: Props) {
           </PostModal>
         </ModalPortal>
       )}
-    </>
+    </CacheKeyContext.Provider>
   );
 }
