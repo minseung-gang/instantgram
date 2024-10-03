@@ -9,9 +9,8 @@ import BookmarkFillIcon from './ui/icons/BookmarkFillIcon';
 import { SimplePost } from '@/model/post';
 import { useLikePost } from '@/service/post/client/usePostService';
 import { useBookMark } from '@/service/user/client/useUserService';
-import { useQuery } from '@tanstack/react-query';
-import { parseDate } from '@/utils/date';
-import CommentForm from './CommentForm';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCacheKeys } from '@/app/context/CacheKeyContext';
 
 type Props = {
   post: SimplePost;
@@ -33,6 +32,8 @@ async function fetchUser() {
 
 export default function ActionBar({ post, children }: Props) {
   const { id, likes, username, text } = post;
+  const queryClient = useQueryClient();
+  const cacheKeys = useCacheKeys();
 
   const { data: user } = useQuery({
     queryKey: ['users'],
@@ -42,8 +43,13 @@ export default function ActionBar({ post, children }: Props) {
   const liked = user ? likes.includes(user.username) : false;
   const bookmarked = user?.bookmarks?.includes(id) ?? false;
 
-  const likeMutation = useLikePost(id, user.username);
-  const bookmarkMutation = useBookMark(id);
+  const likeMutation = useLikePost(
+    queryClient,
+    id,
+    user?.username,
+    cacheKeys.postsKey,
+  );
+  const bookmarkMutation = useBookMark(queryClient, id, username);
 
   const handleLike = () => {
     user && likeMutation.mutate(liked);
