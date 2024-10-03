@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 
 const queryKeys = {
   search: (keyword: string) => ['user', keyword] as const,
-  post: () => ['userPost'] as const,
+  post: (username: string, tab: string) => ['userPost', username, tab] as const,
 };
 
 const queryOptions = {
@@ -19,7 +19,7 @@ const queryOptions = {
     refetchOnMount: true,
   }),
   post: (username: string, tab: string) => ({
-    queryKey: ['userPost', username, tab],
+    queryKey: queryKeys.post(username, tab),
     queryFn: async () => await userService.getUserPost(username, tab),
     cacheTime: 0,
     staleTime: 0,
@@ -39,11 +39,11 @@ const queryOptions = {
 
     onSettled: () => {
       // 서버 응답 후 최신 데이터 가져오기 (이 부분에서 무효화 후 데이터 fetch)
-      queryClient.invalidateQueries({ queryKey: ['userPost', 'saved'] });
+
       queryClient.invalidateQueries({ queryKey: ['users'] });
     },
   }),
-  follow: (queryClient: QueryClient, targetId: string, username: string) => ({
+  follow: (queryClient: QueryClient, targetId: string) => ({
     mutationFn: async (isFollow: boolean) => {
       return await userService.updateFollow(targetId, isFollow);
     },
