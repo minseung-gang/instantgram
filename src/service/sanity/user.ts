@@ -58,7 +58,10 @@ export async function getUserForProfile(username: string) {
       "followers": count(followers),
       "posts": count(*[_type=="post" && author->username == "${username}"])
     }`,
-      { username },
+      undefined,
+      {
+        next: { tags: [`user/${username}`] },
+      },
     );
 
     // 쿼리 결과가 없을 경우
