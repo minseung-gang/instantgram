@@ -6,7 +6,7 @@ import SearchIcon from '../ui/icons/SearchIcon';
 import HomeIcon from '../ui/icons/HomeIcon';
 import InstaIcon from '../ui/icons/InstaIcon';
 import Link from 'next/link';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import LogoutIcon from '../ui/icons/LogoutIcon';
 import useModal from '@/hooks/useModal';
 import NewPost from '../ui/modal/NewPost';
@@ -14,11 +14,13 @@ import UserSearch from '../ui/modal/UserSearch';
 
 export default function Navbar() {
   const { modalState, openModal, closeModal, toggleModal } = useModal();
+  const { data: session } = useSession();
 
   return (
     <header className="sticky top-0 py-8 px-4 h-[100vh] flex flex-col items-center bg-white border-r z-50">
       <InstaIcon />
       <NewPost
+        user={session?.user}
         isOpen={modalState.newPost.isOpen}
         onClose={() => toggleModal('newPost')}
       />
@@ -43,7 +45,7 @@ export default function Navbar() {
           </button>
           <button
             className="p-3 hover:bg-gray-100 rounded-lg"
-            onClick={() => closeModal('newPost')}
+            onClick={() => toggleModal('newPost')}
           >
             <NewIcon />
           </button>
