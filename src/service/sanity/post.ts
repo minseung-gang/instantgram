@@ -52,6 +52,8 @@ export async function getPostsOf(username: string) {
       | order(_createdAt desc){
           ${simplePostProjection}
         }`,
+      {},
+      { cache: 'no-store' },
     )
     .then(mapPosts);
 }
@@ -126,4 +128,26 @@ export async function addComment(
       },
     ])
     .commit({ autoGenerateArrayKeys: true });
+}
+
+export async function createPost(userId: string, text: string, file: Blob) {
+  return client.assets //
+    .upload('image', file)
+    .then((result) => {
+      return client.create(
+        {
+          _type: 'post',
+          author: { _ref: userId },
+          photo: { asset: { _ref: result._id } },
+          comments: [
+            {
+              comment: text,
+              author: { _ref: userId, _type: 'reference' },
+            },
+          ],
+          likes: [],
+        },
+        { autoGenerateArrayKeys: true },
+      );
+    });
 }
