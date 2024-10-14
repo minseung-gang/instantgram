@@ -81,7 +81,7 @@ export async function addComment(comment: string, id: string) {
   }
 }
 
-export async function OptimisticComment(
+export async function optimisticComment(
   queryClient: QueryClient,
   postId: string,
 ) {
@@ -104,4 +104,17 @@ export async function OptimisticComment(
     console.log('업데이트 게시물', updatedPosts);
   }
   return { previousPosts };
+}
+
+export async function uploadPost(formData: FormData) {
+  try {
+    const response = await fetch(`/api/posts`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    return response.json();
+  } catch (err) {
+    throw console.log(err, 'Falled to upload post');
+  }
 }
