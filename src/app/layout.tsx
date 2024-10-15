@@ -2,11 +2,9 @@ import type { Metadata } from 'next';
 import { Open_Sans } from 'next/font/google';
 import './globals.css';
 import { ReactNode } from 'react';
-import AuthProvider from '@/components/auth/AuthProvider';
+import AuthProvider from '@/context/AuthProvider';
 import ReactQueryProviders from '../components/commons/ReactQueryProvider';
 import Navbar from '@/components/commons/Navbar';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/auth';
 
 type Props = { children: ReactNode };
 
