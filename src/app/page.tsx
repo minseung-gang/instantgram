@@ -1,8 +1,8 @@
 import UserSidebar from '@/components/UserSidebar';
 import Followingbar from '@/components/Followingbar';
-import PostContainer from '@/components/ui/post/PostContainer';
+import PostContainer from '@/components/post/PostContainer';
 import { getServerSession } from 'next-auth';
-import { authOptions } from './api/auth/[...nextauth]/route';
+import { authOptions } from '@/app/auth';
 import { redirect } from 'next/navigation';
 
 export default async function HomePage() {
@@ -15,7 +15,7 @@ export default async function HomePage() {
 
   return (
     <section className="flex w-full h-full justify-center mx-auto">
-      <div className="w-full max-w-[630px] sm:min-w-[630px] flex flex-col">
+      <div className="w-full h-full max-w-[630px] sm:min-w-[630px] flex flex-col">
         <Followingbar />
         <PostContainer />
       </div>
