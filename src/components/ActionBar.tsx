@@ -10,7 +10,7 @@ import { SimplePost } from '@/model/post';
 import { useLikePost } from '@/service/post/client/usePostService';
 import { useBookMark } from '@/service/user/client/useUserService';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useCacheKeys } from '@/app/context/CacheKeyContext';
+import { useCacheKeys } from '@/context/CacheKeyContext';
 
 type Props = {
   post: SimplePost;
