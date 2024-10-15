@@ -3,7 +3,7 @@ import { getProviders, signIn } from 'next-auth/react';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/auth';
 import { redirect } from 'next/navigation';
-import Signin from '@/components/auth/Signin';
+import Signin from '@/components/Signin';
 import Image from 'next/image';
 import { Metadata } from 'next';
 
