@@ -1,19 +1,22 @@
 import { SimplePost } from '@/model/post';
 import { QueryClient } from '@tanstack/react-query';
-import { cookies } from 'next/headers';
 
 export async function getDetailPost(postId: string) {
   try {
-    console.log(postId, '게시물아이디');
-    const response = await fetch(`/api/posts/${postId}`, {
-      method: 'GET',
-    });
-    console.log('게시물 아이디', postId);
+    console.log('여기여기여기', postId);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/posts/${postId}`,
+      {
+        method: 'GET',
+      },
+    );
+
     if (!response.ok) {
       throw new Error('Failed to fetch post');
     }
 
     const data = await response.json();
+
     return data;
   } catch (error) {
     console.error('Error fetching post:', error);
@@ -101,7 +104,6 @@ export async function optimisticComment(
       return post;
     });
     queryClient.setQueryData(['posts'], updatedPosts);
-    console.log('업데이트 게시물', updatedPosts);
   }
   return { previousPosts };
 }
