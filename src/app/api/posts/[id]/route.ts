@@ -8,7 +8,7 @@ type Context = {
   params: { id: string };
 };
 
-export async function GET(context: Context) {
+export async function GET(_: NextRequest, context: Context) {
   return withSessionUser(async () => {
     const response = await getPost(context.params.id); //
     return NextResponse.json(response);
