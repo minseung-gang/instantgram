@@ -2,8 +2,6 @@ import { getUserForProfile } from '@/service/sanity/user';
 import React, { cache } from 'react';
 import UserProfile from '@/components/UserProfile';
 import { notFound } from 'next/navigation';
-import { getDehydratedQuery, Hydrate } from '@/utils/react-query';
-import queryOptions from '@/service/post/client/queries';
 import UserPosts from '@/components/UserPosts';
 import { Metadata } from 'next';
 
