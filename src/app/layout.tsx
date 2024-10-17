@@ -5,6 +5,9 @@ import { ReactNode } from 'react';
 import AuthProvider from '@/context/AuthProvider';
 import ReactQueryProviders from '../components/commons/ReactQueryProvider';
 import Navbar from '@/components/commons/Navbar';
+import { getServerSession } from 'next-auth';
+import { authOptions } from './auth';
+import { redirect } from 'next/navigation';
 
 type Props = { children: ReactNode };
 
@@ -19,12 +22,13 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: Props) {
+  const session = await getServerSession(authOptions);
   return (
     <html lang="ko" className={`${openSans.className}`}>
       <body className="w-full flex overflow-auto">
         <AuthProvider>
           <ReactQueryProviders>
-            <Navbar />
+            {session && <Navbar />}
             <main className="w-full flex justify-center h-full overflow-scroll">
               {children}
             </main>
