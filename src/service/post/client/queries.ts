@@ -19,7 +19,7 @@ const queryOptions = {
     mutationFn: async (comment: string) =>
       await PostService.addComment(comment, postId),
     onMutate: async () =>
-      await PostService.OptimisticComment(queryClient, postId),
+      await PostService.optimisticComment(queryClient, postId),
     Error: (context: { previousPosts: SimplePost[] | undefined }) => {
       // 오류 발생 시 원래 상태로 복구
       queryClient.setQueryData(['posts'], context.previousPosts);
@@ -52,16 +52,27 @@ const queryOptions = {
 
     onError: (context: { previousPosts: SimplePost[] }) => {
       // 오류 발생 시 원래 상태로 복구
-      console.log('오류');
       queryClient.setQueryData(queryKey, context.previousPosts);
     },
 
     onSetteld: () => {
-      console.log('키키');
-      // 서버 응답 후 최신 데이터 가져오기 (이 부분에서 무효화 후 데이터 fetch)
       queryClient.invalidateQueries({
         queryKey: queryKey,
       });
+    },
+  }),
+
+  upload: (queryClient: QueryClient, onSuccessCallback?: () => void) => ({
+    mutationFn: async (formData: FormData) =>
+      await PostService.uploadPost(formData),
+    onSuccess: () => {
+      if (onSuccessCallback) {
+        onSuccessCallback();
+        queryClient.invalidateQueries({ queryKey: ['posts'] });
+      }
+    },
+    onError: (error: Error) => {
+      console.error('업로드 실패:', error.message);
     },
   }),
 };
