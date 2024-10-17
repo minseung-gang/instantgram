@@ -19,10 +19,10 @@ export function useBookMark(
   postId: string,
   username: string,
 ) {
-  return useMutation(queryOptions.bookmark(queryClient, postId, username));
+  return useMutation(queryOptions.bookmark(queryClient, postId));
 }
 
-export function useFollow(targetId: string, username: string) {
+export function useFollow(targetId: string) {
   const queryClient = useQueryClient();
-  return useMutation(queryOptions.follow(queryClient, targetId, username));
+  return useMutation(queryOptions.follow(queryClient, targetId));
 }
