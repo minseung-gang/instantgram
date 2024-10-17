@@ -1,4 +1,3 @@
-import { HomeUser } from '@/model/user';
 import * as userService from '@/service/user/server/UserService';
 
 const queryKeys = {
