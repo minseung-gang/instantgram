@@ -7,11 +7,29 @@ import Link from 'next/link';
 import { SimpleUser } from '@/model/user';
 import Avatar from './Avatar';
 import { ClipLoader } from 'react-spinners';
-export default function Followingbar() {
-  const { data, isLoading: loading } = useUsers();
+import { useQuery } from '@tanstack/react-query';
 
+async function fetchUsers() {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/me`,
+    {
+      method: 'GET',
+    },
+  );
+  if (!response.ok) {
+    throw new Error('Failed to fetch posts');
+  }
+
+  return response.json();
+}
+
+export default function Followingbar() {
+  const { data, isLoading: loading } = useQuery({
+    queryKey: ['users'],
+    queryFn: fetchUsers,
+  });
   const users = data?.following
-    ? [...data.following, ...data.following, ...data.following]
+    ? [...data?.following, ...data?.following, ...data?.following]
     : [];
 
   return (
