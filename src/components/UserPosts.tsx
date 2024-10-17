@@ -7,7 +7,7 @@ import PostIcon from './ui/icons/PostIcon';
 import BookmarkIcon from './ui/icons/BookmarkIcon';
 import HeartIcon from './ui/icons/HeartIcon';
 import PostGrid from './PostGrid';
-import { CacheKeyContext } from '@/app/context/CacheKeyContext';
+import { CacheKeyContext } from '@/context/CacheKeyContext';
 
 type Props = {
   user: ProfileUser;
