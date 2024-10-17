@@ -1,8 +1,6 @@
-import revalidateProfileUser from '@/actions/actions';
 import { HomeUser } from '@/model/user';
 import * as userService from '@/service/user/client/UserService';
 import { QueryClient } from '@tanstack/react-query';
-import { revalidatePath } from 'next/cache';
 
 const queryKeys = {
   search: (keyword: string) => ['user', keyword] as const,
