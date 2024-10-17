@@ -11,7 +11,6 @@ type SigninProps = {
 };
 
 export default function Signin({ providers, callbackUrl }: SigninProps) {
-  console.log(providers, '프로바이더');
   return (
     <>
       {Object.values(providers).map(({ name, id }) => (
