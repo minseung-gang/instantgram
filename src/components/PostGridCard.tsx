@@ -5,7 +5,7 @@ import ModalPortal from './ui/ModalPortal';
 import PostModal from './post/PostModal';
 import PostDetail from './post/PostDetail';
 import { signIn, useSession } from 'next-auth/react';
-import { CacheKeyContext } from '@/app/context/CacheKeyContext';
+import { CacheKeyContext } from '@/context/CacheKeyContext';
 
 type Props = {
   post: SimplePost;
