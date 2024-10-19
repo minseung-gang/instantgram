@@ -28,9 +28,7 @@ export default function Followingbar() {
     queryKey: ['users'],
     queryFn: fetchUsers,
   });
-  const users = data?.following
-    ? [...data?.following, ...data?.following, ...data?.following]
-    : [];
+  const users = data?.following ? [...data?.following] : [];
 
   return (
     <section className="w-full flex justify-center items-center p-4 my-4 rounded-lg min-h-[90px] overflow-x-auto">
