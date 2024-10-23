@@ -6,7 +6,9 @@
 |새게시물모달|마이페이지|
 |<img src="https://github.com/user-attachments/assets/0c5198a0-89b4-4074-8aad-d9c491243de2" width="450px" height="200px">|<img src="https://github.com/user-attachments/assets/bf4de9c7-85b5-48d0-aa71-36b5c070fa57" width="450px" height="200px">|
 
-👉 [바로가기]([https://pulbatte.com/](https://vercel.com/api/toolbar/link/instantgram-mu.vercel.app?via=project-dashboard-alias-list&p=1&page=/)
+👉 [바로가기](https://instantgram-mu.vercel.app/)
+
+
 
 
 
