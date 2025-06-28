@@ -34,7 +34,7 @@ export async function getUser(username: string) {
   );
 }
 
-export async function serachUsers(keyword?: string) {
+export async function searchUsers(keyword?: string) {
   const query = keyword
     ? `&& (name match "*${keyword}*" || username match "*${keyword}*")`
     : '';

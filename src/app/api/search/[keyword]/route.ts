@@ -1,4 +1,4 @@
-import { serachUsers } from '@/service/sanity/user';
+import { searchUsers } from '@/service/sanity/user';
 import { NextRequest, NextResponse } from 'next/server';
 
 type Context = {
@@ -6,7 +6,7 @@ type Context = {
 };
 
 export async function GET(_: NextRequest, context: Context) {
-  return serachUsers(context.params.keyword).then((data) =>
+  return searchUsers(context.params.keyword).then((data) =>
     NextResponse.json(data),
   );
 }

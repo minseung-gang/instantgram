@@ -10,7 +10,7 @@ const queryKeys = {
 const queryOptions = {
   search: (keyword: string) => ({
     queryKey: queryKeys.search(keyword),
-    queryFn: async () => await userService.serachUser(keyword),
+    queryFn: async () => await userService.searchUser(keyword),
     enabled: !!keyword,
     staleTime: 0, // 데이터가 즉시 구식으로 간주됨
     cacheTime: 0, // 캐싱된 데이터가 즉시 사라짐

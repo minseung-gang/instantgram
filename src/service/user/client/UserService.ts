@@ -1,14 +1,11 @@
 import { HomeUser, ProfileUser } from '@/model/user';
 import { QueryClient } from '@tanstack/react-query';
 
-export async function serachUser(keyword: string) {
+export async function searchUser(keyword: string) {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/search/${keyword}`,
-      {
-        method: 'GET',
-      },
-    );
+    const response = await fetch(`/api/search/${keyword}`, {
+      method: 'GET',
+    });
     const data = await response.json();
     return data;
   } catch {
